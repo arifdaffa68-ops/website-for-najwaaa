@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Journey For You ❤️</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #090d16, #1a102f, #311026);
+            color: #f1f5f9;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Floating Hearts Background Container */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .heart-particle {
+            position: absolute;
+            color: rgba(244, 63, 94, 0.6);
+            font-size: 18px;
+            animation: fallHeart linear infinite;
+        }
+
+        @keyframes fallHeart {
+            0% {
+                transform: translateY(-10vh) translateX(0) scale(0.6) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(110vh) translateX(50px) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* --- INTRO SCREEN (SURAT CINTA) --- */
+        #introScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(9, 13, 22, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .envelope-box {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            padding: 40px 30px;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(244, 63, 94, 0.25);
+            max-width: 400px;
+            width: 90%;
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .envelope-icon {
+            font-size: 4.5rem;
+            color: #f43f5e;
+            margin-bottom: 20px;
+            animation: pulseIcon 2s infinite;
+        }
+
+        @keyframes pulseIcon {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* --- MAIN CONTENT WRAPPER --- */
+        #mainContent {
+            display: none;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+            max-width: 550px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .show-content {
+            display: block !important;
+            opacity: 1 !important;
+        }
+
+        /* Hero / Title Section */
+        .hero-section {
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(244, 63, 94, 0.3);
+        }
+
+        .subtitle {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        /* Glassmorphism Card for 4 Photos */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.55);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* 4 Photos Grid Layout */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .gallery-item {
+            height: 150px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid rgba(244, 63, 94, 0.3);
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.6);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Overlay text petunjuk klik pada foto */
+        .gallery-item::after {
+            content: '🔍 Klik';
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        /* --- MODAL POPUP UNTUK FOTO LAINNYA --- */
+        #photoModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(9, 13, 22, 0.9);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            background: rgba(30, 41, 59, 0.85);
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            border-radius: 24px;
+            padding: 25px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        #photoModal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #photoModal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: #fb7185;
+            margin-bottom: 15px;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-img-item {
+            height: 110px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-img-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .close-btn {
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Button Utama */
+        .btn {
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 63, 94, 0.6);
+        }
+
+        /* Floating Music Player Bar */
+        .music-player-bar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 18px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 99;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .music-info {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            text-align: left;
+        }
+
+        .music-toggle {
+            background: #f43f5e;
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-item { height: 180px; }
+            .modal-grid { grid-template-columns: 1fr; }
+            .modal-img-item { height: 160px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FLOATING FALLING HEARTS BACKGROUND -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- INTRO SCREEN: SURAT CINTA -->
+    <div id="introScreen">
+        <div class="envelope-box">
+            <div class="envelope-icon"><i class="fa-solid fa-envelope-open-heart"></i></div>
+            <h1 style="font-size: 1.5rem; margin-bottom: 8px;">Pesan Spesial Untukmu</h1>
+            <p class="subtitle" style="margin-bottom: 20px;">Sentuh tombol di bawah untuk membuka kenangan indah kita ❤️</p>
+            <button class="btn" onclick="openEnvelope()">Buka Surat Sekarang 💌</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Judul & 4 Foto Utama) -->
+    <div id="mainContent">
+        <div class="hero-section">
+            <h1>Hai, Sayangku! ✨</h1>
+            <p class="subtitle">Klik salah satu foto di bawah untuk melihat koleksi kenangan lainnya.</p>
+        </div>
+
+        <!-- 4 FOTO UTAMA (Mengambil foto 1 sampai 4 dari folder foto/) -->
+        <div class="glass-card">
+            <div class="gallery-grid">
+                <!-- Foto 1 -->
+                <div class="gallery-item" onclick="showMorePhotos(1)">
+                    <img src="foto/foto 1.jpeg" alt="Foto 1">
+                </div>
+                <!-- Foto 2 -->
+                <div class="gallery-item" onclick="showMorePhotos(2)">
+                    <img src="foto/foto 2.jpeg" alt="Foto 2">
+                </div>
+                <!-- Foto 3 -->
+                <div class="gallery-item" onclick="showMorePhotos(3)">
+                    <img src="foto/foto 3.jpeg" alt="Foto 3">
+                </div>
+                <!-- Foto 4 -->
+                <div class="gallery-item" onclick="showMorePhotos(4)">
+                    <img src="foto/foto 4.jpeg" alt="Foto 4">
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            Crafted with ❤️ and all my heart for you.
+        </footer>
+    </div>
+
+    <!-- MODAL POPUP UNTUK MENAMPILKAN 3 FOTO LAINNYA -->
+    <div id="photoModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-title" id="modalTitle">✨ Momen Indah Lainnya ✨</div>
+            <div class="modal-grid" id="modalGrid">
+                <!-- Foto tambahan akan dimasukkan secara dinamis via JavaScript -->
+            </div>
+            <button class="close-btn" onclick="closeModalButton()">Tutup ❤️</button>
+        </div>
+    </div>
+
+    <!-- FLOATING MUSIC PLAYER -->
+    <div class="music-player-bar">
+        <div class="music-info">
+            <div style="font-weight: 600; color: #fff;">Penjaga Hati 🎵</div>
+            <div style="font-size: 0.75rem;">Playing Romantic vibe</div>
+        </div>
+        <button class="music-toggle" id="musicToggleBtn" onclick="toggleMusic()">
+            <i class="fa-solid fa-play" id="musicIcon"></i>
+        </button>
+    </div>
+
+    <!-- AUDIO ELEMENT ("Penjaga Hati") -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3" type="audio/mp3">
+        Browser kamu tidak mendukung pemutar audio.
+    </audio>
+
+    <script>
+        // --- DATA PEMETAAN FOTO TAMBAHAN DARI FOLDER foto/ (Foto 5 sampai 15) ---
+        const extraPhotosData = {
+            1: [
+                "foto/foto 5.jpeg",
+                "foto/foto 6.jpeg",
+                "foto/foto 7.jpeg"
+            ],
+            2: [
+                "foto/foto 8.jpeg",
+                "foto/foto 9.jpeg",
+                "foto/foto 10.jpeg"
+            ],
+            3: [
+                "foto/foto 11.jpeg",
+                "foto/foto 12.jpeg",
+                "foto/foto 13.jpeg"
+            ],
+            4: [
+                "foto/foto 14.jpeg",
+                "foto/foto 15.jpeg",
+                "foto/foto 16.jpeg"
+            ]
+        };
+
+        // --- FUNGSI MENAMPILKAN MODAL FOTO ---
+        function showMorePhotos(index) {
+            const modal = document.getElementById('photoModal');
+            const modalGrid = document.getElementById('modalGrid');
+            
+            const photos = extraPhotosData[index];
+            
+            modalGrid.innerHTML = '';
+            photos.forEach(url => {
+                modalGrid.innerHTML += `
+                    <div class="modal-img-item">
+                        <img src="${url}" alt="Extra Memory">
+                    </div>
+                `;
+            });
+
+            modal.classList.add('active');
+        }
+
+        function closeModalButton() {
+            const modal = document.getElementById('photoModal');
+            modal.classList.remove('active');
+        }
+
+        function closeModal(event) {
+            const modal = document.getElementById('photoModal');
+            modal.classList.remove('active');
+        }
+
+        // --- GENERATOR HATI BERJATUHAN ---
+        function createHeartParticle() {
+            const container = document.getElementById('heartsContainer');
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerHTML = '<i class="fa-solid fa-heart"></i>';
+            
+            heart.style.left = Math.random() * 100 + 'vw';
+            const size = Math.random() * 16 + 12;
+            heart.style.fontSize = size + 'px';
+            const duration = Math.random() * 4 + 4;
+            heart.style.animationDuration = duration + 's';
+            heart.style.opacity = Math.random() * 0.7 + 0.3;
+
+            container.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        setInterval(createHeartParticle, 300);
+
+        // --- TRANSISI BUKA SURAT & AUTO-PLAY LAGU ---
+        const music = document.getElementById('bgMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        let isPlaying = false;
+
+        function openEnvelope() {
+            const intro = document.getElementById('introScreen');
+            const main = document.getElementById('mainContent');
+            
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.style.display = 'none';
+                main.classList.add('show-content');
+            }, 800);
+
+            music.play().then(() => {
+                musicIcon.classList.remove('fa-play');
+                musicIcon.classList.add('fa-pause');
+                isPlaying = true;
+            }).catch(e => {
+                console.log("Autoplay dicegah browser, silakan gunakan tombol play di pojok kanan bawah.");
+            });
+        }
+
+        // --- KONTROL TOMBOL MUSIK MANUAL ---
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicIcon.classList.remove('fa-pause');
+                musicIcon.classList.add('fa-play');
+                isPlaying = false;
+            } else {
+                music.play().then(() => {
+                    musicIcon.classList.remove('fa-play');
+                    musicIcon.classList.add('fa-pause');
+                    isPlaying = true;
+                }).catch(e => {
+                    alert("Klik sekali lagi untuk memutar musik ya!");
+                });
+            }
+        }
+    </script>
+</body>
+</html>
